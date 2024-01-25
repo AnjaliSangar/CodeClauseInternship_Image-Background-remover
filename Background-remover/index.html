@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<style>
+    body {
+        background-color: seashell;
+    }
+</style>
+
+<body>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <form>
+                    <div class="form-group">
+                        <label for="filepicker">Select a file :</label>
+                        <input class="form-control" id="filepicker" type="file">
+                    </div>
+                    <button class="btn btn-primary" onclick="handleUpload()" type="button">Upload</button>
+                </form>
+                <button class="btn btn-secondary" onclick="downloadFile()">Download</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+    <script>
+        let imageURL;
+        function handleUpload() {
+            const fileInput = document.getElementById('filepicker');
+            const image = fileInput.files[0];
+
+            const formData = new FormData();
+            formData.append("image_file", image);
+            formData.append('size', 'auto');
+
+            const apikey = "8uHDuJeDSjw5WBrg7BTxPxY6";
+            fetch('https://api.remove.bg/v1.0/removebg', {
+                method: 'POST',
+                headers: {
+                    'X-Api-Key': apikey,
+                },
+                body: formData
+            })
+                .then(function (response) {
+                    return response.blob();
+                })
+                .then(function (blob) {
+                    console.log(blob);
+                    const url = URL.createObjectURL(blob);
+                    imageURL = url;
+                    const img = document.createElement('img');
+                    img.src = url;
+                    document.body.appendChild(img);
+                })
+                .catch();
+
+            console.log("clicked");
+        }
+
+        function downloadFile() {
+            var anchorElement = document.createElement('a');
+            anchorElement.href = imageURL;
+            anchorElement.download = 'no-bg.png';
+            document.body.appendChild(anchorElement);
+
+            anchorElement.click();
+
+            document.body.removechild(a);
+        }
+
+
+
+    </script>
+</body>
+
+</html>
